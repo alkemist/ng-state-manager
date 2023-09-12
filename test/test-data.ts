@@ -20,23 +20,22 @@ interface ExampleStateInterface extends ValueRecord {
     }
 })
 export class ExampleState extends BaseState {
-    property = 'value';
-    
     @Select()
-    aStringValueSelector(state: ExampleStateInterface): string {
+    static aStringValueSelector(state: ExampleStateInterface): string {
         return state.aStringValue;
     }
 
     @Action()
-    aAction(context: StateContext<ExampleStateInterface>): void {
-
+    static aAction(context: StateContext<ExampleStateInterface>, value: string): StateContext<ExampleStateInterface> {
+        context.patchState({
+            aStringValue: value
+        })
+        return context;
     }
 }
 
 export class ExampleComponent extends BaseComponent {
-    property = 'value';
-
-    @Observe() aStringValueObserver: Signal<string> = signal<string>('');
+    @Observe(ExampleState.aStringValueSelector) aStringValueObserver: Signal<string> = signal<string>('');
 
     constructor(private stateManager: StateManager) {
         super();

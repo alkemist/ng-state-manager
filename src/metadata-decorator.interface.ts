@@ -39,3 +39,12 @@
 
 
  */
+
+import {AnyValue, ValueRecord} from "@alkemist/compare-engine";
+import {StateContext} from "./state.context.js";
+
+export type SelectFunction<T extends ValueRecord = ValueRecord>
+    = (state: T) => AnyValue;
+
+export type ActionFunction<T extends ValueRecord = ValueRecord>
+    = (context: StateContext<T>, payload: AnyValue) => AnyValue;
