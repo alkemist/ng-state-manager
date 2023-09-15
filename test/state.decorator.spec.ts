@@ -1,17 +1,22 @@
-import {StateManager} from "../src/state-manager.js";
-import {ExampleState} from "./test-data.js";
+import { StateManager } from "../src/state-manager.js";
+import { ExampleComponent, ExampleState } from "./test-data.js";
 
 describe("State Decorator", () => {
-    it('should work', () => {
-        const stateManager = new StateManager();
-        /*const exampleState = new ExampleState();*/
-        //const exampleComponent = new ExampleComponent(stateManager);
 
-        StateManager.register(ExampleState);
+  beforeEach(() => {
 
-        expect(stateManager).toBeTruthy();
-        /*expect(exampleComponent).toBeTruthy();
+  })
 
-        expect(exampleComponent.aStringValueObserver()).toBe('');*/
-    })
+  it('should work', () => {
+    StateManager.register(ExampleState);
+
+    const stateManager = new StateManager();
+
+    expect(stateManager).toBeTruthy();
+
+    const exampleComponent = new ExampleComponent(stateManager);
+    exampleComponent.dispatch('test');
+
+    expect(exampleComponent.aStringValueObserver()).toEqual('test')
+  })
 });

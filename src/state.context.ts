@@ -1,23 +1,31 @@
-import {ValueRecord} from "@alkemist/compare-engine";
+import { CompareEngine, ValueRecord } from "@alkemist/compare-engine";
+import { StateInterface } from './state.interface.js';
 
-export interface StateContext<T extends ValueRecord> {
-    /**
-     * Get the current state.
-     */
-    getState(): T;
+export class StateContext<S extends ValueRecord> {
+  state: CompareEngine<S>;
 
-    /**
-     * Reset the state to a new value.
-     */
-    setState(val: T): T;
+  constructor(private configuration: StateInterface<S>) {
+    this.state = new CompareEngine<S>(
+      undefined,
+      configuration.defaults,
+      configuration.defaults,
+    );
+  }
 
-    /**
-     * Patch the existing state with the provided value.
-     */
-    patchState(val: Partial<T>): T;
+  getState(): S {
+    return this.state.rightValue as S;
+  }
 
-    /**
-     * Dispatch a new action and return the dispatched observable.
-     */
-    dispatch(actions: any | any[]): void;
+  setState(val: S): S {
+    this.state.updateRight(val);
+    return this.getState();
+  }
+
+  patchState(val: Partial<S>): S {
+    return this.getState();
+  }
+
+  dispatch(actions: any | any[]): void {
+    // Replaced by State Manager dispatch
+  }
 }

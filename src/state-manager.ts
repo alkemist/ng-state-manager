@@ -1,40 +1,76 @@
-import {Injectable, Type} from "@angular/core";
-import {BaseState} from "./state.base.js";
-import {ActionFunction, SelectFunction} from "./metadata-decorator.interface.js";
-import {TreeMap} from "./tree-map.js";
-import {StateInterface} from "./state.interface.js";
-import {ValueRecord} from "@alkemist/compare-engine";
+import { Injectable, Type, WritableSignal } from "@angular/core";
+import { BaseState } from "./state.base.js";
+import { IndexMap, StateMap } from "./index-map.js";
+import { StateInterface } from "./state.interface.js";
+import { ValueRecord } from "@alkemist/compare-engine";
+import { SelectFunction } from './state-select.type.js';
+import { ActionFunction } from './state-action.type.js';
+import { StateAction } from './state-action.js';
 
 @Injectable()
 export class StateManager {
-    private static selects = new TreeMap<SelectFunction>();
-    private static actions = new TreeMap<ActionFunction>();
-    private static observers = new TreeMap<any>();
+  private static index = new IndexMap();
 
-    static registerSelect<T extends ValueRecord>(stateName: string, selectKey: string, selectFunction: SelectFunction<T>) {
-        StateManager.selects.setChild(stateName, selectKey, selectFunction);
+  static getState<S extends ValueRecord>(stateKey: string): StateMap<S> {
+    return StateManager.index.get(stateKey) as StateMap<S>;
+  }
+
+  static registerSelect<S extends ValueRecord>(
+    stateKey: string,
+    stateClass: Type<BaseState>,
+    selectKey: string,
+    selectFunction: SelectFunction<S>
+  ) {
+    StateManager.index.setSelect<S>(stateKey, selectKey, selectFunction);
+  }
+
+  static registerAction<S extends ValueRecord>(
+    stateKey: string,
+    stateClass: Type<BaseState>,
+    actionKey: string,
+    actionFunction: ActionFunction<S>
+  ) {
+    StateManager.index.setAction(stateKey, actionKey, actionFunction);
+  }
+
+  static registerObserver<S extends ValueRecord>(
+    stateKey: string,
+    selectKey: string,
+    observer: WritableSignal<any>,
+  ) {
+    StateManager.index.setObserver(stateKey, selectKey, observer);
+  }
+
+  static registerState<S extends ValueRecord>(
+    stateKey: string,
+    stateClass: Type<BaseState>,
+    configuration: StateInterface<S>
+  ) {
+    StateManager.index.setConfiguration<S>(stateKey, configuration);
+  }
+
+  static register(state: Type<BaseState>) {
+    const index = StateManager.getState(state.name);
+
+    console.log("[StateManager] Register", state.name);
+    console.log("[StateManager] Register index", index);
+
+    /*index.selects.forEach((selectFunction) => {
+      selectFunction.apply(selectFunction, [ index.context!.state.rightValue! ])
+    })
+
+    index.actions.forEach((actionFunction) => {
+      actionFunction.apply(actionFunction, [ index.context!, ...actionFunction.arguments.slice(1) ])
+    })*/
+  }
+
+  dispatch(
+    actions: StateAction | StateAction[]
+  ) {
+    if (actions instanceof StateAction) {
+      actions = [ actions ];
     }
 
-    static registerAction<T extends ValueRecord>(stateName: string, actionKey: string, actionFunction: ActionFunction<T>) {
-        StateManager.actions.setChild(stateName, actionKey, actionFunction);
-    }
-
-    static registerObserver(name: string, observer: any) {
-
-    }
-
-    static registerState<T>(name: string, configuration: StateInterface<T>) {
-
-    }
-
-    static register(state: Type<BaseState>) {
-        console.log("[StateManager] Register", state.name);
-        console.log("[StateManager] Register selects", StateManager.selects.get(state.name));
-        console.log("[StateManager] Register actions", StateManager.actions.get(state.name));
-        console.log("[StateManager] Register observers", StateManager.observers.get(state.name));
-    }
-
-    dispatch(actions: any | any[]) {
-
-    }
+    actions.forEach(action => action.apply(this))
+  }
 }
