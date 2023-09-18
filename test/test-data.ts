@@ -5,8 +5,8 @@ import {Observe} from "../src/state-observe.decorator.js";
 import {StateContext} from "../src/state.context.js";
 import {StateManager} from "../src/state-manager.js";
 import {ValueRecord} from "@alkemist/compare-engine";
-import {StateDispatch} from '../src/state-dispatch.js';
 import {computed, Signal, WritableSignal} from '@angular/core';
+import {StateActionDispatch} from "../src/state-action-dispatch.js";
 
 interface ExampleStateInterface extends ValueRecord {
     aStringValue: string
@@ -56,7 +56,8 @@ export class ExampleComponent {
 
     dispatch(value: string) {
         StateManager.dispatch(
-            new StateDispatch(ExampleState, ExampleState.aAction, value)
+            ExampleState,
+            new StateActionDispatch(ExampleState.aAction, value)
         )
     }
 }

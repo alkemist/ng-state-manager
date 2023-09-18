@@ -6,9 +6,11 @@ import {setUpSignalTesting, SignalTesting} from './setup-effect.js';
 describe("State Decorator", () => {
     let signalTesting: SignalTesting;
     let onChangeSpy: jest.SpyInstance;
+    let consoleLogSpy: jest.SpyInstance;
 
     beforeEach(() => {
         signalTesting = setUpSignalTesting();
+        consoleLogSpy = jest.spyOn(console, 'log');
     })
 
     it('should work', () => {
@@ -45,6 +47,7 @@ describe("State Decorator", () => {
             exampleComponent.dispatch(aStringValueTest);
 
             expect(onChangeSpy).not.toBeCalled();
+            expect(consoleLogSpy).toBeCalledTimes(2);
         })
     })
 });

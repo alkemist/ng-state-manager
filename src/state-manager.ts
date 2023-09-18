@@ -1,11 +1,12 @@
-import {Injectable, WritableSignal} from "@angular/core";
+import {Injectable, Type, WritableSignal} from "@angular/core";
 import {StatesMap} from "./states-map.js";
 import {StateInterface} from "./state.interface.js";
 import {ValueKey, ValueRecord} from "@alkemist/compare-engine";
 import {SelectFunction} from './state-select.type.js';
 import {ActionFunction} from './state-action.type.js';
-import {StateDispatch} from './state-dispatch.js';
 import {StateIndex} from "./state-index.js";
+import {StateActionDispatch} from "./state-action-dispatch.js";
+import {StateDispatch} from "./state-dispatch.interface.js";
 
 @Injectable()
 export class StateManager {
@@ -49,13 +50,22 @@ export class StateManager {
         StateManager.index.setConfiguration<S>(stateKey, configuration);
     }
 
-    static dispatch(
-        actions: StateDispatch | StateDispatch[]
-    ) {
-        if (actions instanceof StateDispatch) {
+    static dispatchMultiple(actions: StateDispatch | StateDispatch[]) {
+        if (!Array.isArray(actions)) {
             actions = [actions];
         }
 
-        actions.forEach(action => action.apply())
+        actions.forEach(action => StateManager.dispatch(action.state, action.actions));
+    }
+
+    static dispatch(
+        state: Type<any>,
+        actions: StateActionDispatch | StateActionDispatch[]
+    ) {
+        if (!Array.isArray(actions)) {
+            actions = [actions];
+        }
+
+        StateManager.getState(state.name).dispatch(actions);
     }
 }

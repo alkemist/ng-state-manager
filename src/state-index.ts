@@ -7,6 +7,7 @@ import {SelectFunction} from "./state-select.type.js";
 import {ActionFunction} from "./state-action.type.js";
 import {WritableSignal} from "@angular/core";
 import {StateContext} from "./state.context.js";
+import {StateActionDispatch} from "./state-action-dispatch.js";
 
 export class StateIndex<S extends ValueRecord = any> {
     private selects = new SmartMap<StateSelect<S>>();
@@ -58,7 +59,17 @@ export class StateIndex<S extends ValueRecord = any> {
             .update(this.getState());
     }
 
-    apply(actionFunction: ActionFunction<S>, args: any[]) {
+    dispatch(actions: StateActionDispatch[]) {
+        actions.forEach(action =>
+            this.apply(action.actionFunction, action.args)
+        )
+
+        this.updateObservers();
+
+        this.state.rightToLeft();
+    }
+
+    private apply(actionFunction: ActionFunction<S>, args: any[]) {
         if (this.configuration.showLog) {
             const stateAction = this.actions.find(
                 (action) => action.isEqual(actionFunction)
@@ -71,10 +82,6 @@ export class StateIndex<S extends ValueRecord = any> {
             new StateContext(this.state),
             ...args
         ])
-
-        this.updateObservers();
-
-        this.state.rightToLeft();
     }
 
     private updateObservers() {
