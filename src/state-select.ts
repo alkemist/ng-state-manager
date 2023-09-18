@@ -1,17 +1,30 @@
-import { SelectFunction } from './state-select.type.js';
-import { ValueKey, ValueRecord } from '@alkemist/compare-engine';
+import {SelectFunction} from './state-select.type.js';
+import {ValueKey, ValueRecord} from '@alkemist/compare-engine';
+import {SmartMap} from "./smart-map.js";
+import {WritableSignal} from "@angular/core";
 
 export class StateSelect<S extends ValueRecord, T = any> {
-  constructor(private selectFunction: SelectFunction<S>, private _path?: ValueKey | ValueKey[]) {
-  }
+    private observers = new SmartMap<WritableSignal<T>>()
 
-  get path() {
-    return this._path;
-  }
+    constructor(private selectFunction: SelectFunction<S>, private _path?: ValueKey | ValueKey[]) {
+    }
 
-  apply(state: S) {
-    return this.selectFunction.apply(this.selectFunction, [
-      state
-    ]) as T
-  }
+    get path() {
+        return this._path;
+    }
+
+    addObserver(observerKey: string, observer: WritableSignal<T>) {
+        this.observers.set(observerKey, observer);
+        return this;
+    }
+
+    update(state: S) {
+        const value = this.selectFunction.apply(this.selectFunction, [
+            state
+        ]) as T;
+
+        this.observers.each(
+            (observer) => observer.set(value)
+        )
+    }
 }

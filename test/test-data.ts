@@ -1,5 +1,4 @@
 import {State} from "../src/state.decorator.js";
-import {BaseState} from "../src/state.base.js";
 import {Select} from "../src/state-select.decorator.js";
 import {Action} from "../src/state-action.decorator.js";
 import {Observe} from "../src/state-observe.decorator.js";
@@ -20,9 +19,10 @@ export const aStringValueDefault = 'init';
     name: exampleStateName,
     defaults: {
         aStringValue: aStringValueDefault
-    }
+    },
+    showLog: true
 })
-export class ExampleState extends BaseState {
+export class ExampleState {
     @Select('aStringValue')
     static aStringValueSelector(state: ExampleStateInterface): string {
         return state.aStringValue;
