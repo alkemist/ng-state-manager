@@ -7,7 +7,7 @@ import {SelectFunction} from "./state-select.type.js";
 import {ActionFunction} from "./state-action.type.js";
 import {WritableSignal} from "@angular/core";
 import {StateContext} from "./state.context.js";
-import {StateActionDispatch} from "./state-action-dispatch.js";
+import {StateActionDispatch} from "./state-action-dispatch.interface.js";
 
 export class StateIndex<S extends ValueRecord = any> {
     private selects = new SmartMap<StateSelect<S>>();
@@ -30,18 +30,18 @@ export class StateIndex<S extends ValueRecord = any> {
         return this.state.rightValue as S;
     }
 
-    setSelect(
+    setSelect<T>(
         selectKey: string,
-        selectFunction: SelectFunction<S>,
+        selectFunction: SelectFunction<S, T>,
         path?: ValueKey | ValueKey[]
     ) {
         const stateSelect = new StateSelect(selectFunction, path);
         this.selects.set(selectKey, stateSelect);
     }
 
-    setAction(
+    setAction<T>(
         actionKey: string,
-        actionFunction: ActionFunction<S>,
+        actionFunction: ActionFunction<S, T>,
         actionLog?: string
     ) {
         const stateAction = new StateAction(actionKey, actionFunction, actionLog);
@@ -59,9 +59,9 @@ export class StateIndex<S extends ValueRecord = any> {
             .update(this.getState());
     }
 
-    dispatch(actions: StateActionDispatch[]) {
+    dispatch(actions: StateActionDispatch<S>[]) {
         actions.forEach(action =>
-            this.apply(action.actionFunction, action.args)
+            this.apply(action.actionFunction, action.payload)
         )
 
         this.updateObservers();
@@ -69,19 +69,22 @@ export class StateIndex<S extends ValueRecord = any> {
         this.state.rightToLeft();
     }
 
-    private apply(actionFunction: ActionFunction<S>, args: any[]) {
+    private apply<T>(actionFunction: ActionFunction<S, T>, payload: T) {
+        actionFunction.apply(actionFunction, [
+            new StateContext(this.state),
+            payload
+        ])
+
         if (this.configuration.showLog) {
             const stateAction = this.actions.find(
                 (action) => action.isEqual(actionFunction)
             )
 
-            console.log(`[State][${this.configuration.name}] Action "${stateAction}"`)
+            console.log(`[State][${this.configuration.name}] Action "${stateAction}"`);
+            console.log(`[State][${this.configuration.name}] Payload`, payload);
+            console.log(`[State][${this.configuration.name}] Before`, this.state.leftValue);
+            console.log(`[State][${this.configuration.name}] After`, this.state.rightValue);
         }
-
-        actionFunction.apply(actionFunction, [
-            new StateContext(this.state),
-            ...args
-        ])
     }
 
     private updateObservers() {

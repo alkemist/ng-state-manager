@@ -7,19 +7,20 @@ describe("State Decorator", () => {
     let signalTesting: SignalTesting;
     let onChangeSpy: jest.SpyInstance;
     let consoleLogSpy: jest.SpyInstance;
+    let exampleComponent: ExampleComponent;
 
     beforeEach(() => {
         signalTesting = setUpSignalTesting();
         consoleLogSpy = jest.spyOn(console, 'log');
+
+        exampleComponent = new ExampleComponent();
+        onChangeSpy = jest.spyOn(exampleComponent, 'onChange');
     })
 
-    it('should work', () => {
+    it('should dispatch string', () => {
         signalTesting.runInTestingInjectionContext((injector: Injector) => {
-            const exampleComponent = new ExampleComponent();
             const aStringValueTest = 'test';
             let aStringValueEffect = '';
-
-            onChangeSpy = jest.spyOn(exampleComponent, 'onChange');
 
             effect(
                 () => {
@@ -35,7 +36,7 @@ describe("State Decorator", () => {
             expect(onChangeSpy).toBeCalledTimes(1);
 
             onChangeSpy.mockReset();
-            exampleComponent.dispatch(aStringValueTest);
+            exampleComponent.dispatchStringValue(aStringValueTest);
             signalTesting.flushEffects();
 
             expect(exampleComponent.aStringValueObserver()).toEqual(aStringValueTest)
@@ -44,10 +45,14 @@ describe("State Decorator", () => {
             expect(onChangeSpy).toBeCalledTimes(1);
 
             onChangeSpy.mockReset();
-            exampleComponent.dispatch(aStringValueTest);
+            exampleComponent.dispatchStringValue(aStringValueTest);
 
             expect(onChangeSpy).not.toBeCalled();
-            expect(consoleLogSpy).toBeCalledTimes(2);
+            expect(consoleLogSpy).toBeCalledTimes(2 * 4);
         })
     })
+
+    it('should dispatch object', () => {
+
+    });
 });

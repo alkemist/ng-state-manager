@@ -10,16 +10,15 @@ export class StateContext<S extends ValueRecord> {
         return this.state.rightValue as S;
     }
 
-    setState(val: S): S {
+    setState(val: S) {
         this.state.updateRight(val);
         this.state.updateCompareIndex();
-        return this.getState();
     }
 
-    patchState(val: Partial<S>): S {
-        return this.setState({
+    patchState(val: Partial<S>) {
+        this.setState({
             ...this.getState(),
-            val
+            ...val
         });
     }
 }

@@ -6,7 +6,7 @@ import {WritableSignal} from "@angular/core";
 export class StateSelect<S extends ValueRecord, T = any> {
     private observers = new SmartMap<WritableSignal<T>>()
 
-    constructor(private selectFunction: SelectFunction<S>, private _path?: ValueKey | ValueKey[]) {
+    constructor(private selectFunction: SelectFunction<S, T>, private _path?: ValueKey | ValueKey[]) {
     }
 
     get path() {

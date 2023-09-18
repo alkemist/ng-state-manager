@@ -6,10 +6,10 @@ import {WritableSignal} from '@angular/core';
 import {StateIndex} from "./state-index.js";
 
 export class StatesMap extends Map<string, StateIndex> {
-    setSelect<S extends ValueRecord>(
+    setSelect<S extends ValueRecord, T>(
         stateKey: string,
         selectKey: string,
-        selectFunction: SelectFunction<S>,
+        selectFunction: SelectFunction<S, T>,
         path?: ValueKey | ValueKey[]
     ): this {
         let map = this.has(stateKey)

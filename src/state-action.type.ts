@@ -1,5 +1,5 @@
-import { AnyValue, ValueRecord } from '@alkemist/compare-engine';
-import { StateContext } from './state.context.js';
+import {ValueRecord} from '@alkemist/compare-engine';
+import {StateContext} from './state.context.js';
 
-export type ActionFunction<T extends ValueRecord = any>
-  = (context: StateContext<T>, ...args: any) => AnyValue;
+export type ActionFunction<S extends ValueRecord = any, T = any>
+    = (context: StateContext<S>, payload?: T) => void;

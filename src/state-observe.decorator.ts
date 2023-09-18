@@ -17,7 +17,7 @@ export function Observe<S extends ValueRecord, T>(state: any, selectFunction: Se
             }
         });
 
-        StateManager.registerObserver<S>(
+        StateManager.registerObserver<S, T>(
             state.name,
             selectFunction.name,
             `${target.constructor.name}.${propertyKey}`,

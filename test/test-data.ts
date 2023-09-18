@@ -6,10 +6,15 @@ import {StateContext} from "../src/state.context.js";
 import {StateManager} from "../src/state-manager.js";
 import {ValueRecord} from "@alkemist/compare-engine";
 import {computed, Signal, WritableSignal} from '@angular/core';
-import {StateActionDispatch} from "../src/state-action-dispatch.js";
+
+interface UserInterface {
+    id: number,
+    name: string,
+}
 
 interface ExampleStateInterface extends ValueRecord {
-    aStringValue: string
+    aStringValue: string;
+    oObjectValue: UserInterface | null
 }
 
 export const exampleStateName = 'example';
@@ -18,7 +23,8 @@ export const aStringValueDefault = 'init';
 @State<ExampleStateInterface>({
     name: exampleStateName,
     defaults: {
-        aStringValue: aStringValueDefault
+        aStringValue: aStringValueDefault,
+        oObjectValue: null,
     },
     showLog: true
 })
@@ -28,18 +34,32 @@ export class ExampleState {
         return state.aStringValue;
     }
 
-    @Action('An action')
-    static aAction(context: StateContext<ExampleStateInterface>, payload: string): StateContext<ExampleStateInterface> {
-        context.setState({
+    @Select('oObjectValue')
+    static anObjectValueSelector(state: ExampleStateInterface): UserInterface | null {
+        return state.oObjectValue;
+    }
+
+    @Action('An string value action')
+    static aStringValueAction(context: StateContext<ExampleStateInterface>, payload?: string) {
+        context.patchState({
             aStringValue: payload
         })
-        return context;
+    }
+
+    @Action('An object value action')
+    static aObjectValueAction(context: StateContext<ExampleStateInterface>, payload?: UserInterface) {
+        context.patchState({
+            oObjectValue: payload
+        })
     }
 }
 
 export class ExampleComponent {
     @Observe(ExampleState, ExampleState.aStringValueSelector)
     aStringValueObserver!: WritableSignal<string>;
+
+    @Observe(ExampleState, ExampleState.anObjectValueSelector)
+    aObjectValueObserver!: WritableSignal<UserInterface | null>;
 
     aStringValueComputed: Signal<string>;
 
@@ -54,10 +74,30 @@ export class ExampleComponent {
         return value;
     }
 
-    dispatch(value: string) {
+    dispatchStringValue(value: string) {
         StateManager.dispatch(
             ExampleState,
-            new StateActionDispatch(ExampleState.aAction, value)
+            ExampleState.aStringValueAction,
+            value
         )
+    }
+
+    dispatchObjectValue(value: UserInterface) {
+        StateManager.dispatch(
+            ExampleState,
+            {
+                actionFunction: ExampleState.aObjectValueAction,
+                payload: value
+            }
+        )
+    }
+}
+
+export class UserService {
+    getLoggedUser(): Promise<UserInterface> {
+        return Promise.resolve({
+            name: 'logged user name',
+            id: 1
+        })
     }
 }
