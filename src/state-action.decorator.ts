@@ -6,13 +6,13 @@ import { Type } from '@angular/core';
 
 const stateMetadataKey = Symbol("Action");
 
-export function Action<T extends ValueRecord>() {
+export function Action<T extends ValueRecord>(log?: string) {
   return function (target: Type<BaseState>, propertyKey: any, descriptor: PropertyDescriptor) {
     /*console.log("[Action Decorator] Target", target.name);
     console.log("[Action Decorator] Property key", propertyKey);
     console.log("[Action Decorator] Descriptor", descriptor);*/
 
-    StateManager.registerAction(target.name, target, propertyKey, descriptor.value);
+    StateManager.registerAction(target.name, target, propertyKey, descriptor.value, log);
 
     return Reflect.getMetadata(stateMetadataKey, target, propertyKey);
   };

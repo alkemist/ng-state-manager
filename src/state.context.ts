@@ -1,4 +1,4 @@
-import { CompareEngine, ValueRecord } from "@alkemist/compare-engine";
+import { CompareEngine, ValueKey, ValueRecord } from "@alkemist/compare-engine";
 import { StateInterface } from './state.interface.js';
 
 export class StateContext<S extends ValueRecord> {
@@ -6,10 +6,14 @@ export class StateContext<S extends ValueRecord> {
 
   constructor(private configuration: StateInterface<S>) {
     this.state = new CompareEngine<S>(
-      undefined,
+      configuration.determineArrayIndexFn,
       configuration.defaults,
       configuration.defaults,
     );
+  }
+
+  update() {
+    this.state.rightToLeft();
   }
 
   getState(): S {
@@ -18,6 +22,7 @@ export class StateContext<S extends ValueRecord> {
 
   setState(val: S): S {
     this.state.updateRight(val);
+    this.state.updateCompareIndex();
     return this.getState();
   }
 
@@ -25,7 +30,16 @@ export class StateContext<S extends ValueRecord> {
     return this.getState();
   }
 
-  dispatch(actions: any | any[]): void {
-    // Replaced by State Manager dispatch
+  isUpdated(path?: ValueKey | ValueKey[]) {
+    if (!path) {
+      return true;
+    }
+
+    console.log('[Context] Is updated ?',
+      path,
+      this.state,
+      this.state.getRightState(path)
+    )
+    return this.state.getRightState(path).isUpdated;
   }
 }

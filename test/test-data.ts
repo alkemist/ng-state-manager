@@ -6,31 +6,32 @@ import { Observe } from "../src/state-observe.decorator.js";
 import { StateContext } from "../src/state.context.js";
 import { StateManager } from "../src/state-manager.js";
 import { ValueRecord } from "@alkemist/compare-engine";
-import { StateAction } from '../src/state-action';
-import { signal } from '@angular/core';
+import { StateDispatch } from '../src/state-dispatch';
+import { computed, Signal, WritableSignal } from '@angular/core';
 
 interface ExampleStateInterface extends ValueRecord {
   aStringValue: string
 }
 
+export const exampleStateName = 'example';
+export const aStringValueDefault = 'init';
+
 @State<ExampleStateInterface>({
-  name: 'example',
+  name: exampleStateName,
   defaults: {
-    aStringValue: ''
+    aStringValue: aStringValueDefault
   }
 })
 export class ExampleState extends BaseState {
-  @Select()
+  @Select('aStringValue')
   static aStringValueSelector(state: ExampleStateInterface): string {
-    console.log('ExampleState', 'Select', state)
     return state.aStringValue;
   }
 
-  @Action()
-  static aAction(context: StateContext<ExampleStateInterface>, value: string): StateContext<ExampleStateInterface> {
-    console.log('ExampleState', 'Action', value);
+  @Action('An action')
+  static aAction(context: StateContext<ExampleStateInterface>, payload: string): StateContext<ExampleStateInterface> {
     context.setState({
-      aStringValue: value
+      aStringValue: payload
     })
     return context;
   }
@@ -38,15 +39,19 @@ export class ExampleState extends BaseState {
 
 export class ExampleComponent {
   @Observe(ExampleState, ExampleState.aStringValueSelector)
-  aStringValueObserver = signal<string>('');
+  aStringValueObserver!: WritableSignal<string>;
 
-  constructor(private stateManager: StateManager) {
-    //super();
+  aStringValueComputed: Signal<string>;
+
+  constructor() {
+    this.aStringValueComputed = computed(() => {
+      return this.aStringValueObserver();
+    });
   }
 
   dispatch(value: string) {
-    this.stateManager.dispatch(
-      new StateAction(ExampleState, ExampleState.aAction, value)
+    StateManager.dispatch(
+      new StateDispatch(ExampleState, ExampleState.aAction, value)
     )
   }
 }

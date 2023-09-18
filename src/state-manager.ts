@@ -2,10 +2,10 @@ import { Injectable, Type, WritableSignal } from "@angular/core";
 import { BaseState } from "./state.base.js";
 import { IndexMap, StateMap } from "./index-map.js";
 import { StateInterface } from "./state.interface.js";
-import { ValueRecord } from "@alkemist/compare-engine";
+import { ValueKey, ValueRecord } from "@alkemist/compare-engine";
 import { SelectFunction } from './state-select.type.js';
 import { ActionFunction } from './state-action.type.js';
-import { StateAction } from './state-action.js';
+import { StateDispatch } from './state-dispatch.js';
 
 @Injectable()
 export class StateManager {
@@ -19,18 +19,20 @@ export class StateManager {
     stateKey: string,
     stateClass: Type<BaseState>,
     selectKey: string,
-    selectFunction: SelectFunction<S>
+    selectFunction: SelectFunction<S>,
+    path?: ValueKey | ValueKey[]
   ) {
-    StateManager.index.setSelect<S>(stateKey, selectKey, selectFunction);
+    StateManager.index.setSelect<S>(stateKey, selectKey, selectFunction, path);
   }
 
   static registerAction<S extends ValueRecord>(
     stateKey: string,
     stateClass: Type<BaseState>,
     actionKey: string,
-    actionFunction: ActionFunction<S>
+    actionFunction: ActionFunction<S>,
+    log?: string
   ) {
-    StateManager.index.setAction(stateKey, actionKey, actionFunction);
+    StateManager.index.setAction(stateKey, actionKey, actionFunction, log);
   }
 
   static registerObserver<S extends ValueRecord>(
@@ -49,28 +51,13 @@ export class StateManager {
     StateManager.index.setConfiguration<S>(stateKey, configuration);
   }
 
-  static register(state: Type<BaseState>) {
-    const index = StateManager.getState(state.name);
-
-    console.log("[StateManager] Register", state.name);
-    console.log("[StateManager] Register index", index);
-
-    /*index.selects.forEach((selectFunction) => {
-      selectFunction.apply(selectFunction, [ index.context!.state.rightValue! ])
-    })
-
-    index.actions.forEach((actionFunction) => {
-      actionFunction.apply(actionFunction, [ index.context!, ...actionFunction.arguments.slice(1) ])
-    })*/
-  }
-
-  dispatch(
-    actions: StateAction | StateAction[]
+  static dispatch(
+    actions: StateDispatch | StateDispatch[]
   ) {
-    if (actions instanceof StateAction) {
+    if (actions instanceof StateDispatch) {
       actions = [ actions ];
     }
 
-    actions.forEach(action => action.apply(this))
+    actions.forEach(action => action.apply())
   }
 }
