@@ -5,5 +5,6 @@ export interface StateInterface<S extends ValueRecord> {
     name: string,
     defaults: S,
     determineArrayIndexFn?: ((paths: ValueKey[]) => ValueKey) | undefined,
+    enableLocalStorage?: boolean,
     showLog?: boolean
 }
