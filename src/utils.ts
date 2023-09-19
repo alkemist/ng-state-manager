@@ -1,9 +1,9 @@
-import {StateActionDispatch} from "./state-action-dispatch.interface.js";
-import {ActionFunction} from "./state-action.type.js";
-import {CompareHelper, ValueRecord} from "@alkemist/compare-engine";
+import { StateActionDispatch } from "./state-action-dispatch.interface.js";
+import { StateActionFunction } from "./state-action-function.type.js";
+import { CompareHelper, ValueRecord } from "@alkemist/compare-engine";
 
 export function isActionFunction<S extends ValueRecord, T>(
-    actions: ActionFunction<S, T> | StateActionDispatch<S, T> | StateActionDispatch<S, T>[]
-): actions is ActionFunction<S, T> {
-    return !Array.isArray(actions) && CompareHelper.isFunction(actions);
+  actions: StateActionFunction<S, T> | StateActionDispatch<S, T> | StateActionDispatch<S, T>[]
+): actions is StateActionFunction<S, T> {
+  return !Array.isArray(actions) && CompareHelper.isFunction(actions);
 }

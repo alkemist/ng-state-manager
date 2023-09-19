@@ -1,15 +1,15 @@
-import {ValueRecord} from '@alkemist/compare-engine';
-import {ActionFunction} from './state-action.type.js';
+import { ValueRecord } from '@alkemist/compare-engine';
+import { StateActionFunction } from './state-action-function.type.js';
 
 export class StateAction<S extends ValueRecord, T = any> {
-    constructor(private actionName: string, private actionFunction: ActionFunction<S, T>, private actionLog?: string) {
-    }
+  constructor(private actionName: string, private actionFunction: StateActionFunction<S, T>, private actionLog?: string) {
+  }
 
-    toString() {
-        return this.actionLog ?? this.actionName;
-    }
+  toString() {
+    return this.actionLog ?? this.actionName;
+  }
 
-    isEqual(actionFunction: ActionFunction<S, T>) {
-        return this.actionFunction.name === actionFunction.name;
-    }
+  isEqual(actionFunction: StateActionFunction<S, T>) {
+    return this.actionFunction.name === actionFunction.name;
+  }
 }
