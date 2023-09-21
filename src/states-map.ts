@@ -5,50 +5,64 @@ import { StateActionFunction } from './state-action-function.type.js';
 import { WritableSignal } from '@angular/core';
 import { StateIndex } from "./state-index.js";
 
-export class StatesMap extends Map<string, StateIndex> {
-  setSelect<S extends ValueRecord, T>(
+export abstract class StatesMap {
+  private static index = new Map<string, StateIndex>();
+
+  static registerSelect<S extends ValueRecord, T>(
     stateKey: string,
     selectKey: string,
     selectFunction: StateSelectFunction<S, T>,
     path?: ValueKey | ValueKey[]
-  ): this {
-    let map = this.has(stateKey)
-      ? this.get(stateKey) as StateIndex<S>
+  ) {
+    let map = StatesMap.index.has(stateKey)
+      ? StatesMap.index.get(stateKey) as StateIndex<S>
       : new StateIndex<S>();
 
     map.setSelect(selectKey, selectFunction, path);
-    return this.set(stateKey, map);
+    StatesMap.index.set(stateKey, map);
   }
 
-  setAction<S extends ValueRecord>(stateKey: string, actionKey: string, actionFunction: StateActionFunction<S>, actionLog?: string): this {
-    let map = this.has(stateKey)
-      ? this.get(stateKey) as StateIndex<S>
+  static registerAction<S extends ValueRecord, T>(
+    stateKey: string,
+    actionKey: string,
+    actionFunction: StateActionFunction<S, T>,
+    actionLog?: string
+  ) {
+    let map = StatesMap.index.has(stateKey)
+      ? StatesMap.index.get(stateKey) as StateIndex<S>
       : new StateIndex<S>();
 
     map.setAction(actionKey, actionFunction, actionLog);
-    return this.set(stateKey, map);
+    StatesMap.index.set(stateKey, map);
   }
 
-  setObserver<S extends ValueRecord>(
+  static registerObserver<S extends ValueRecord, T>(
     stateKey: string,
     selectKey: string,
     observerKey: string,
-    observer: WritableSignal<any>
-  ): this {
-    let map = this.has(stateKey)
-      ? this.get(stateKey) as StateIndex<S>
+    observer: WritableSignal<T>
+  ) {
+    let map = StatesMap.index.has(stateKey)
+      ? StatesMap.index.get(stateKey) as StateIndex<S>
       : new StateIndex<S>();
 
     map.setObserver(selectKey, observerKey, observer);
-    return this.set(stateKey, map);
+    StatesMap.index.set(stateKey, map);
   }
 
-  setConfiguration<S extends ValueRecord>(stateKey: string, configuration: StateInterface<S>) {
-    let map = this.has(stateKey)
-      ? this.get(stateKey) as StateIndex<S>
+  static registerState<S extends ValueRecord>(
+    stateKey: string,
+    configuration: StateInterface<S>
+  ) {
+    let map = StatesMap.index.has(stateKey)
+      ? StatesMap.index.get(stateKey) as StateIndex<S>
       : new StateIndex<S>();
 
     map.initContext(configuration);
+  }
+
+  static get<S extends ValueRecord>(stateKey: string) {
+    return StatesMap.index.get(stateKey) as StateIndex<S>
   }
 }
 

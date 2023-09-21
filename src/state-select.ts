@@ -18,13 +18,15 @@ export class StateSelect<S extends ValueRecord, T = any> {
     return this;
   }
 
-  update(state: S) {
-    const value = this.selectFunction.apply(this.selectFunction, [
+  getValue(state: S) {
+    return this.selectFunction.apply(this.selectFunction, [
       state
     ]) as T;
+  }
 
+  update(state: S) {
     this.observers.each(
-      (observer) => observer.set(value)
+      (observer) => observer.set(this.getValue(state))
     )
   }
 }
