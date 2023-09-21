@@ -1,6 +1,7 @@
 export * from './smart-map.js';
 export * from './state.context.js';
 export * from './state.decorator.js';
+export * from './state.error.js';
 export * from './state.interface.js';
 export * from './state-action.decorator.js';
 export * from './state-action.js';

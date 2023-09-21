@@ -4,12 +4,10 @@ import { ValueRecord } from "@alkemist/compare-engine";
 import { Type } from "@angular/core";
 import { StatesMap } from './states-map.js';
 
-const stateMetadataKey = Symbol("State");
+export function State<C extends Type<Object>, S extends ValueRecord>(configuration: StateInterface<C, S>) {
+    return <ClassDecorator>function (target: C) {
+        StatesMap.registerState<C, S>(target.name, configuration);
 
-export function State<T extends ValueRecord>(configuration: StateInterface<T>) {
-  return <ClassDecorator>function (target: Type<any>) {
-    StatesMap.registerState(target.name, configuration);
-
-    return Reflect.getMetadata(stateMetadataKey, target);
-  };
+        return Reflect.getMetadata(Symbol("State"), target);
+    };
 }

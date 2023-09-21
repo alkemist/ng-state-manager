@@ -4,17 +4,19 @@ import { Type } from '@angular/core';
 import { StatesMap } from './states-map.js';
 import { StateSelectFunction } from './state-select-function.type.js';
 
-const selectMetadataKey = Symbol("Select");
+export function Select<C extends Type<Object>, S extends ValueRecord, T>(pathForCheckUpdated?: ValueKey | ValueKey[]) {
+    return <MethodDecorator>function (
+        target: C,
+        propertyKey: string,
+        descriptor: TypedPropertyDescriptor<StateSelectFunction<S, T>>
+    ) {
+        StatesMap.registerSelect<C, S, T>(
+            target.name,
+            propertyKey,
+            descriptor.value!,
+            pathForCheckUpdated
+        );
 
-export function Select<S extends ValueRecord, T>(pathForCheckUpdated?: ValueKey | ValueKey[]) {
-  return <MethodDecorator>function (target: Type<any>, propertyKey: any, descriptor: PropertyDescriptor) {
-    StatesMap.registerSelect<S, T>(
-      target.name,
-      propertyKey,
-      descriptor.value as StateSelectFunction<S, T>,
-      pathForCheckUpdated
-    );
-
-    return Reflect.getMetadata(selectMetadataKey, target, propertyKey);
-  };
+        return Reflect.getMetadata(Symbol("Select"), target, propertyKey);
+    };
 }

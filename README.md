@@ -1,4 +1,4 @@
-# Compare Engine
+# State Manager
 
 ## Installation
 

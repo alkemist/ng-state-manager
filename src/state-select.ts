@@ -21,7 +21,7 @@ export class StateSelect<S extends ValueRecord, T = any> {
   getValue(state: S) {
     return this.selectFunction.apply(this.selectFunction, [
       state
-    ]) as T;
+    ]);
   }
 
   update(state: S) {
