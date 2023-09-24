@@ -1,7 +1,7 @@
 import { StateSelectFunction } from './state-select-function.type.js';
 import { ValueKey, ValueRecord } from '@alkemist/compare-engine';
-import { SmartMap } from "./smart-map.js";
 import { WritableSignal } from "@angular/core";
+import { SmartMap } from '@alkemist/smart-tools';
 
 export class StateSelect<S extends ValueRecord, T = any> {
   private observers = new SmartMap<WritableSignal<T>>()

@@ -1,12 +1,12 @@
 import "reflect-metadata";
 import { ValueKey, ValueRecord } from "@alkemist/compare-engine";
 import { Type } from '@angular/core';
-import { StatesMap } from './states-map.js';
-import { StateSelectFunction } from './state-select-function.type.js';
+import { StatesMap } from '../indexes/states-map.js';
+import { StateSelectFunction } from '../models/state-select-function.type.js';
 
-export function Select<C extends Type<Object>, S extends ValueRecord, T>(pathForCheckUpdated?: ValueKey | ValueKey[]) {
+export function Select<C extends Object, S extends ValueRecord, T>(pathForCheckUpdated?: ValueKey | ValueKey[]) {
     return <MethodDecorator>function (
-        target: C,
+        target: Type<C>,
         propertyKey: string,
         descriptor: TypedPropertyDescriptor<StateSelectFunction<S, T>>
     ) {

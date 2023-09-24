@@ -1,12 +1,12 @@
 import "reflect-metadata";
 import { ValueRecord } from '@alkemist/compare-engine';
 import { signal, Type, WritableSignal } from '@angular/core';
-import { StateSelectFunction } from './state-select-function.type.js';
-import { StatesMap } from './states-map.js';
+import { StateSelectFunction } from '../models/state-select-function.type.js';
+import { StatesMap } from '../indexes/states-map.js';
 
-export function Observe<C extends Type<Object>, S extends ValueRecord, T>(state: C, selectFunction: StateSelectFunction<S, T>) {
+export function Observe<C extends Object, S extends ValueRecord, T>(state: Type<C>, selectFunction: StateSelectFunction<S, T>, ...paths: string[]) {
     return <PropertyDecorator>function (target: Object, propertyKey: keyof Object) {
-        let observer = signal<T | undefined>(undefined)
+        let observer = signal<T | undefined>(undefined);
 
         Object.defineProperty(target, propertyKey,
             {

@@ -1,17 +1,17 @@
 import {
-  aBooleanValueDefault,
-  anObjectValueDefault,
-  aStringValueDefault,
-  ExampleComponent,
-  ExampleState,
-  exampleStateName,
-  UserInterface,
-  UserService
+    aBooleanValueDefault,
+    anObjectValueDefault,
+    aStringValueDefault,
+    Example,
+    ExampleComponent,
+    exampleStateName,
+    UserInterface,
+    UserService
 } from './test-data.js';
 import { effect, Injector } from '@angular/core';
 import { setUpSignalTesting, SignalTesting } from './setup-effect.js';
 import { StateManager } from '../src/state-manager.js';
-import { UnknownAction, UnknownState } from '../src/state.error.js';
+import { UnknownAction } from '../src/models/unknown-action.error.js';
 
 
 describe("State Decorator", () => {
@@ -92,7 +92,6 @@ describe("State Decorator", () => {
     })
 
     it('should dispatch object', async () => {
-
         expect(exampleComponent.anObjectValueObserver()).toEqual(anObjectValueDefault);
 
         await exampleComponent.dispatchObjectValue(aObjectValueTest);
@@ -112,13 +111,8 @@ describe("State Decorator", () => {
 
     it('should throw errors', () => {
         expect(() => {
-            stateManager.dispatch(ExampleComponent, ExampleState.aObjectValueAction);
-        }).toThrow(new UnknownState(ExampleComponent.name));
-
-        expect(() => {
-            stateManager.dispatch(ExampleState, () => {
-            });
-        }).toThrow(new UnknownAction(ExampleState.name, ''));
+            stateManager.dispatch(new Example.aUnknownValueAction(''));
+        }).toThrow(new UnknownAction('aUnknownValueAction'));
     })
 
     afterEach(() => {

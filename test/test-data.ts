@@ -13,10 +13,33 @@ export interface ExampleStateInterface extends ValueRecord {
     aBooleanValue: boolean;
 }
 
-export const exampleStateName = 'ExampleState';
+export const exampleStateName = 'ExampleState'
 export const aStringValueDefault = 'init';
 export const anObjectValueDefault = null;
 export const aBooleanValueDefault = false;
+
+export namespace Example {
+    export class aStringValueAction {
+        static readonly log = "An string value action";
+
+        constructor(public payload: string) {
+        }
+    }
+
+    export class aObjectValueAction {
+        static readonly log = "An object value action";
+
+        constructor(public payload: UserInterface) {
+        }
+    }
+
+    export class aUnknownValueAction {
+        static readonly log = "An unknown value action";
+
+        constructor(public payload: unknown) {
+        }
+    }
+}
 
 @State({
     class: ExampleState,
@@ -44,15 +67,15 @@ export class ExampleState {
         return state.aBooleanValue;
     }
 
-    @Action('An string value action')
-    static aStringValueAction(context: StateContext<ExampleStateInterface>, payload?: string) {
+    @Action(Example.aStringValueAction)
+    aStringValueAction(context: StateContext<ExampleStateInterface>, payload: string) {
         context.patchState({
             aStringValue: payload
         })
     }
 
-    @Action('An object value action')
-    static aObjectValueAction(context: StateContext<ExampleStateInterface>, payload?: UserInterface) {
+    @Action(Example.aObjectValueAction)
+    aObjectValueAction(context: StateContext<ExampleStateInterface>, payload: UserInterface) {
         context.patchState({
             anObjectValue: payload
         })
@@ -88,9 +111,7 @@ export class ExampleComponent {
 
     dispatchStringValue(value: string) {
         this.stateManager.dispatch(
-            ExampleState,
-            ExampleState.aStringValueAction,
-            value
+            new Example.aStringValueAction(value)
         )
     }
 
@@ -112,11 +133,7 @@ export class UserService {
             const userResponse: UserInterface = await this.getLoggedUser(user);
 
             this.stateManager.dispatch(
-                ExampleState,
-                {
-                    actionFunction: ExampleState.aObjectValueAction,
-                    payload: userResponse
-                }
+                new Example.aObjectValueAction(userResponse)
             )
             resolve();
         })
