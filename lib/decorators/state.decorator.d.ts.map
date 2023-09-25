@@ -1,0 +1,1 @@
+{"version":3,"file":"state.decorator.d.ts","sourceRoot":"src/","sources":["decorators/state.decorator.ts"],"names":[],"mappings":"AAAA,OAAO,kBAAkB,CAAC;AAC1B,OAAO,EAAE,kBAAkB,EAAE,MAAM,4CAA4C,CAAC;AAChF,OAAO,EAAE,WAAW,EAAE,MAAM,0BAA0B,CAAC;AAIvD,wBAAgB,KAAK,CAAC,CAAC,SAAS,MAAM,EAAE,CAAC,SAAS,WAAW,EAAE,aAAa,EAAE,kBAAkB,CAAC,CAAC,EAAE,CAAC,CAAC,kBAMrG"}

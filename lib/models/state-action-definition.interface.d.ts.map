@@ -1,0 +1,1 @@
+{"version":3,"file":"state-action-definition.interface.d.ts","sourceRoot":"src/","sources":["models/state-action-definition.interface.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,gBAAgB,EAAE,MAAM,mCAAmC,CAAC;AAErE,MAAM,WAAW,qBAAqB,CAAC,CAAC,SAAS,MAAM,GAAG,MAAM,EAAE,CAAC,GAAG,GAAG;IACrE,GAAG,EAAE,MAAM,CAAC;IAEZ,KAAI,OAAO,EAAE,CAAC,GAAG,gBAAgB,CAAC,CAAC,CAAC,CAAC;CACxC"}

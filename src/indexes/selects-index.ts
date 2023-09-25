@@ -36,7 +36,9 @@ export class SelectsIndex<C extends Object = Object, S extends ValueRecord = any
     );
 
     if (this.configuration.showLog) {
-      console.log(`[State][${ this.stateKey }] Loaded`, defaultsValue);
+      console.group(`%c [State][${ this.stateKey }] Loaded`, 'color: #2196F3; font-weight: bold');// blue
+      console.log(`%c Init state`, 'color: #FD8182; font-weight: bold', defaultsValue);// grey
+      console.groupEnd();
     }
   }
 
@@ -75,10 +77,11 @@ export class SelectsIndex<C extends Object = Object, S extends ValueRecord = any
     ])
 
     if (this.configuration.showLog) {
-      console.log(`[State][${ this.stateKey }] Action "${ actionKey }"`);
-      console.log(`[State][${ this.stateKey }] Payload`, payload);
-      console.log(`[State][${ this.stateKey }] Before`, this.state.leftValue);
-      console.log(`[State][${ this.stateKey }] After`, this.state.rightValue);
+      console.group(`%c [State][${ this.stateKey }] Action "${ actionKey }"`, 'color: #2196F3; font-weight: bold');// blue
+      console.log(`%c Payload`, 'color: #bada55; font-weight: bold', payload);//green
+      console.log(`%c Before`, 'color: #9E9E9E; font-weight: bold', this.state.leftValue);//grey
+      console.log(`%c After`, 'color: #FD8182; font-weight: bold', this.state.rightValue);//red
+      console.groupEnd();
     }
   }
 

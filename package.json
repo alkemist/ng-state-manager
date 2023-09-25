@@ -9,9 +9,10 @@
   "private": false,
   "sideEffects": false,
   "scripts": {
-    "dist": "rm -f dist/* && tsc --project tsconfig.dist.json",
-    "def": "rm -f lib/* && tsc --project tsconfig.def.json",
+    "dist": "rm -rf dist/* && tsc --project tsconfig.dist.json",
+    "def": "rm -rf lib/* && tsc --project tsconfig.def.json",
     "prepublishOnly": "yarn test && npm run dist && npm run def && webpack",
+    "publishFirst": "npm publish --access public",
     "test": "jest"
   },
   "files": [
@@ -30,15 +31,12 @@
   "keywords": [
     "typescript",
     "angular",
-    "smart",
-    "form",
-    "restore",
-    "comparison",
-    "diff",
-    "difference",
-    "change"
+    "store",
+    "state",
+    "storage",
+    "manager"
   ],
-  "author": "Jérémy ACHAIN",
+  "author": "Jaden ACHAIN",
   "license": "Apache-2.0",
   "bugs": {
     "url": "https://github.com/alkemist/ng-state-manager/issues"
@@ -63,12 +61,12 @@
   "dependencies": {
     "@alkemist/compare-engine": "^1.2.8",
     "@alkemist/smart-tools": "^1.0.1",
-    "@angular/common": "^16.0.0",
-    "@angular/compiler": "^16.0.0",
-    "@angular/compiler-cli": "^16.0.2",
-    "@angular/core": "^16.0.0",
-    "@angular/platform-browser": "^16.0.0",
-    "@angular/platform-browser-dynamic": "^16.0.0",
+    "@angular/common": "^16.x",
+    "@angular/compiler": "^16.x",
+    "@angular/compiler-cli": "^16.x",
+    "@angular/core": "^16.x",
+    "@angular/platform-browser": "^16.x",
+    "@angular/platform-browser-dynamic": "^16.x",
     "rxjs": "^7.8.1",
     "zone.js": "^0.13.1"
   }
