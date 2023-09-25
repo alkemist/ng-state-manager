@@ -1,4 +1,4 @@
-import { ValueRecord } from '@alkemist/compare-engine';
+import { ValueRecord } from '@alkemist/smart-tools';
 import { StateActionFunction } from './state-action-function.type.js';
 export interface StateActionIndex<S extends ValueRecord = any, T = any> {
     stateKey: string;

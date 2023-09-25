@@ -1,11 +1,11 @@
-import { CompareEngine, ValueKey, ValueRecord } from "@alkemist/compare-engine";
+import { CONSOLE_LOG_STYLES, ConsoleHelper, SmartMap, ValueKey, ValueRecord } from "@alkemist/smart-tools";
 import { StateSelect } from "../models/state-select.js";
 import { StateConfiguration } from "../models/state-configuration.interface.js";
 import { StateSelectFunction } from "../models/state-select-function.type.js";
 import { StateActionFunction } from "../models/state-action-function.type.js";
 import { WritableSignal } from "@angular/core";
 import { StateContext } from '../models/state.context.js';
-import { SmartMap } from '@alkemist/smart-tools';
+import { CompareEngine } from '@alkemist/compare-engine';
 
 export class SelectsIndex<C extends Object = Object, S extends ValueRecord = any> {
   private selects = new SmartMap<StateSelect<S>>();
@@ -15,7 +15,7 @@ export class SelectsIndex<C extends Object = Object, S extends ValueRecord = any
 
   initContext(configuration: StateConfiguration<C, S>) {
     this.configuration = configuration;
-    this.stateKey = configuration.class.name;
+    this.stateKey = configuration.name;
 
     let defaultsValue = configuration.defaults;
 
@@ -36,9 +36,11 @@ export class SelectsIndex<C extends Object = Object, S extends ValueRecord = any
     );
 
     if (this.configuration.showLog) {
-      console.group(`%c [State][${ this.stateKey }] Loaded`, 'color: #2196F3; font-weight: bold');// blue
-      console.log(`%c Init state`, 'color: #FD8182; font-weight: bold', defaultsValue);// grey
-      console.groupEnd();
+      ConsoleHelper.group(
+        `[State][${ this.stateKey }] Loaded`,
+        [ { title: 'Init state', data: defaultsValue } ],
+        [ CONSOLE_LOG_STYLES.blue, CONSOLE_LOG_STYLES.red ]
+      )
     }
   }
 
@@ -77,11 +79,16 @@ export class SelectsIndex<C extends Object = Object, S extends ValueRecord = any
     ])
 
     if (this.configuration.showLog) {
-      console.group(`%c [State][${ this.stateKey }] Action "${ actionKey }"`, 'color: #2196F3; font-weight: bold');// blue
-      console.log(`%c Payload`, 'color: #bada55; font-weight: bold', payload);//green
-      console.log(`%c Before`, 'color: #9E9E9E; font-weight: bold', this.state.leftValue);//grey
-      console.log(`%c After`, 'color: #FD8182; font-weight: bold', this.state.rightValue);//red
-      console.groupEnd();
+
+      ConsoleHelper.group(
+        `%c [State][${ this.stateKey }] Action "${ actionKey }"`,
+        [
+          { title: 'Payload', data: payload },
+          { title: 'Before', data: this.state.leftValue },
+          { title: 'After', data: this.state.rightValue }
+        ],
+        [ CONSOLE_LOG_STYLES.blue, CONSOLE_LOG_STYLES.green, CONSOLE_LOG_STYLES.grey, CONSOLE_LOG_STYLES.red ]
+      )
     }
   }
 

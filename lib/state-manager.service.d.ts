@@ -1,5 +1,5 @@
 import { Type } from "@angular/core";
-import { ValueRecord } from "@alkemist/compare-engine";
+import { ValueRecord } from "@alkemist/smart-tools";
 import { StateSelectFunction } from './models/state-select-function.type.js';
 import { StateActionClass } from './models/state-action-class.interface.js';
 export declare class StateManager {

@@ -1,5 +1,5 @@
 import { StateSelectFunction } from './state-select-function.type.js';
-import { ValueKey, ValueRecord } from '@alkemist/compare-engine';
+import { ValueKey, ValueRecord } from '@alkemist/smart-tools';
 import { WritableSignal } from "@angular/core";
 export declare class StateSelect<S extends ValueRecord, T = any> {
     private selectFunction;

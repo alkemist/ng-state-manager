@@ -1,4 +1,4 @@
-import { ValueKey, ValueRecord } from "@alkemist/compare-engine";
+import { ValueKey, ValueRecord } from "@alkemist/smart-tools";
 import { StateConfiguration } from "../models/state-configuration.interface.js";
 import { StateSelectFunction } from "../models/state-select-function.type.js";
 import { StateActionFunction } from "../models/state-action-function.type.js";

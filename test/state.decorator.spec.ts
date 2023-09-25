@@ -10,7 +10,7 @@ import {
 } from './test-data.js';
 import { effect, Injector } from '@angular/core';
 import { setUpSignalTesting, SignalTesting } from './setup-effect.js';
-import { StateManager } from '../src';
+import { StateManager } from '../src/index.js';
 import { UnknownAction } from '../src/models/unknown-action.error.js';
 
 

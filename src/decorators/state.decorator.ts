@@ -1,6 +1,6 @@
 import "reflect-metadata";
 import { StateConfiguration } from "../models/state-configuration.interface.js";
-import { ValueRecord } from "@alkemist/compare-engine";
+import { ValueRecord } from "@alkemist/smart-tools";
 import { Type } from "@angular/core";
 import { StatesMap } from '../indexes/states-map.js';
 

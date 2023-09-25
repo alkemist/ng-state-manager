@@ -1,5 +1,5 @@
 import { StateManager } from './state-manager.service.js';
-import { NgModule } from '@angular/core';
+import { ModuleWithProviders, NgModule, Provider } from '@angular/core';
 
 @NgModule({
   declarations: [],
@@ -10,5 +10,27 @@ import { NgModule } from '@angular/core';
   ],
   bootstrap: []
 })
-export class StateManagerModule {
+export class StateManagerModule extends NgModule {
+  ngModule = StateManagerRootModule;
+  type = StateManagerModule;
+  declarations = [];
+  imports = [];
+  exports = [];
+  providers: Array<Provider> = [ StateManager ];
+  bootstrap = [];
+
+  static forRoot(): ModuleWithProviders<StateManagerRootModule> {
+    return {
+      ngModule: StateManagerRootModule,
+      providers: [ StateManager ]
+    };
+  }
+}
+
+/**
+ * @ignore
+ */
+@NgModule()
+export class StateManagerRootModule extends NgModule {
+
 }

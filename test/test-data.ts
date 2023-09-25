@@ -1,4 +1,4 @@
-import { ValueRecord } from "@alkemist/compare-engine";
+import { ValueRecord } from "@alkemist/smart-tools";
 import { computed, Signal, WritableSignal } from '@angular/core';
 import { Action, Observe, Select, State, StateContext, StateManager } from '../src/index.js';
 

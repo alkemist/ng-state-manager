@@ -1,5 +1,4 @@
-import { ValueRecord } from '@alkemist/compare-engine'
-import { ValueKey } from '@alkemist/compare-engine/lib/value.type.js';
+import { ValueKey, ValueRecord } from '@alkemist/smart-tools'
 import { Type } from '@angular/core';
 
 export interface StateConfiguration<C extends Object, S extends ValueRecord> {
